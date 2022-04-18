@@ -26,6 +26,7 @@ public:
             this->fan_mode = climate::CLIMATE_FAN_AUTO;
             this->swing_mode = climate::CLIMATE_SWING_OFF;
         }
+
         // Never send nan to HA
         if (isnan(this->target_temperature))
             this->target_temperature = 20;
@@ -127,7 +128,7 @@ public:
                 // else
                 //    output_P(status, PSTR(TOPIC_MODE), PSTR(PAYLOAD_MODE_STOP));
                 //    break;
-                if (status != erropdata_mode && this->power_ > 0) {
+                if (status != erropdata_mode && this->power_ == 1) {
                     this->mode = climate::CLIMATE_MODE_AUTO;
                 } else {
                     this->mode = climate::CLIMATE_MODE_OFF;
@@ -135,19 +136,27 @@ public:
                 break;
             case mode_dry:
                 // output_P(status, PSTR(TOPIC_MODE), PSTR(PAYLOAD_MODE_DRY));
-                this->mode = climate::CLIMATE_MODE_DRY;
+                if (status != erropdata_mode && this->power_ == 1) {
+                    this->mode = climate::CLIMATE_MODE_DRY;
+                }
                 break;
             case mode_cool:
                 // output_P(status, PSTR(TOPIC_MODE), PSTR(PAYLOAD_MODE_COOL));
-                this->mode = climate::CLIMATE_MODE_COOL;
+                if (status != erropdata_mode && this->power_ == 1) {
+                    this->mode = climate::CLIMATE_MODE_COOL;
+                }
                 break;
             case mode_fan:
                 // output_P(status, PSTR(TOPIC_MODE), PSTR(PAYLOAD_MODE_FAN));
-                this->mode = climate::CLIMATE_MODE_FAN_ONLY;
+                if (status != erropdata_mode && this->power_ == 1) {
+                    this->mode = climate::CLIMATE_MODE_FAN_ONLY;
+                }
                 break;
             case mode_heat:
                 // output_P(status, PSTR(TOPIC_MODE), PSTR(PAYLOAD_MODE_HEAT));
-                this->mode = climate::CLIMATE_MODE_HEAT;
+                if (status != erropdata_mode && this->power_ == 1) {
+                    this->mode = climate::CLIMATE_MODE_HEAT;
+                }
                 break;
             default:
                 ESP_LOGD("mhi_ac_ctrl", "unknown status mode value %i", value);
